@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <meta content="web_blank" name="shell-type" />
+  <title>Desmistificando a Computação: Linguagens Formais e Autômatos</title>
+
+  <!-- Favicon de Capelo Acadêmico -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+  <link rel="shortcut icon" href="favicon.ico" />
+  <link href="https://fonts.googleapis.com" rel="preconnect" />
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <style>
+    @layer base {
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        overscroll-behavior: none;
+      }
+
+      main>:first-child {
+        margin-top: 0 !important;
+      }
+
+      main>:last-child {
+        margin-bottom: 0 !important;
+      }
+    }
+
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script
+    id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-secondary-fixed": "#00201e", "primary-fixed": "#ffdbce", "error": "#ba1a1a", "on-tertiary-fixed": "#2e1221", "on-primary": "#ffffff", "surface-container-lowest": "#ffffff", "surface-bright": "#fff8f3", "tertiary-fixed-dim": "#e8bacd", "on-surface-variant": "#594238", "on-primary-container": "#fff5f2", "surface-variant": "#f9dfb5", "secondary-fixed-dim": "#aacec9", "surface-container-high": "#ffe5ba", "surface-tint": "#a53c00", "inverse-on-surface": "#ffefd6", "on-primary-fixed-variant": "#7e2c00", "on-error-container": "#93000a", "primary-fixed-dim": "#ffb598", "surface-container-highest": "#f9dfb5", "error-container": "#ffdad6", "outline-variant": "#e0c0b3", "tertiary-fixed": "#ffd8e8", "primary": "#9c3800", "secondary": "#436461", "on-secondary-container": "#496a67", "outline": "#8c7167", "on-secondary-fixed-variant": "#2b4c49", "on-surface": "#261901", "secondary-container": "#c5eae5", "on-error": "#ffffff", "surface": "#fff8f3", "inverse-primary": "#ffb598", "tertiary": "#714e5f", "secondary-fixed": "#c5eae5", "on-tertiary-fixed-variant": "#5e3d4d", "primary-container": "#c44900", "on-primary-fixed": "#360f00", "inverse-surface": "#3d2e11", "on-background": "#261901", "surface-dim": "#f0d7ad", "surface-container": "#ffebcd", "tertiary-container": "#8c6677", "on-secondary": "#ffffff", "background": "#fff8f3", "on-tertiary-container": "#fff4f6", "surface-container-low": "#fff2e0", "on-tertiary": "#ffffff" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "space-md": "1rem", "space-sm": "0.5rem", "gutter": "1.5rem", "space-lg": "1.5rem", "space-xl": "2.5rem", "space-xs": "0.25rem", "margin-sm": "1rem", "gutter-sm": "1rem", "margin": "2rem" }, "fontFamily": { "headline-lg": ["Space Grotesk"], "label-lg": ["Space Grotesk"], "code-inline": ["Space Grotesk"], "body-md": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "display-lg": ["Space Grotesk"], "display-lg-mobile": ["Space Grotesk"], "headline-md": ["Space Grotesk"], "label-md": ["Space Grotesk"], "headline-lg-mobile": ["Space Grotesk"], "body-sm": ["Plus Jakarta Sans"], "headline-sm": ["Space Grotesk"] }, "fontSize": { "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600" }], "code-inline": ["14px", { "lineHeight": "20px", "fontWeight": "500" }], "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }], "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "display-lg-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "500" }], "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "0em", "fontWeight": "600" }], "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }] } } } };</script>
+</head>
+
+<body
+  class="bg-surface font-body-md text-on-surface antialiased min-h-screen selection:bg-primary-fixed selection:text-on-primary-fixed">
+  <main class="w-full min-h-screen bg-surface px-margin-sm lg:px-margin">
+    <div class="flex flex-col w-full">
+      <!-- SEÇÃO: HERO / APRESENTAÇÃO DO PROJETO -->
+      <section class="relative w-full py-space-xl lg:py-28 overflow-hidden">
+        <!-- Efeitos Decorativos de Fundo Estruturado -->
+        <div
+          class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-surface-container-high opacity-40 blur-3xl pointer-events-none">
+        </div>
+        <div
+          class="absolute bottom-0 -left-16 w-80 h-80 rounded-full bg-secondary-container opacity-30 blur-2xl pointer-events-none">
+        </div>
+        <div class="relative z-10 max-w-5xl mx-auto flex flex-col gap-space-lg">
+          <div class="flex flex-wrap items-center gap-space-sm">
+            <span
+              class="inline-flex items-center gap-space-xs px-3 py-1 rounded bg-secondary text-surface font-label-md text-label-md uppercase tracking-wider">
+              <span class="material-symbols-outlined text-[16px]">school</span>
+              Projeto de Extensão Universitária
+            </span>
+            <span
+              class="inline-flex items-center gap-space-xs px-3 py-1 rounded bg-surface-container text-on-surface-variant font-label-md text-label-md">
+              <span class="material-symbols-outlined text-[16px]">sports_esports</span>
+              LFA &amp; Gamificação na Escola Pública
+            </span>
+          </div>
+          <div class="space-y-space-md">
+            <h1
+              class="font-display-lg text-display-lg-mobile lg:text-display-lg text-on-surface tracking-tight leading-tight">
+              Desmistificando a Computação
+            </h1>
+            <p
+              class="font-headline-md text-headline-sm lg:text-headline-md text-secondary font-medium max-w-3xl leading-snug">
+              Popularização da Lógica e Linguagens Formais através de Jogos Educacionais para Estudantes da Rede Pública
+            </p>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-space-lg items-center pt-space-sm">
+            <div class="md:col-span-8 bg-surface-container-low p-space-lg rounded-xl shadow-sm">
+              <p class="font-body-lg text-body-md lg:text-body-lg text-on-surface-variant leading-relaxed">
+                Unindo o rigor analítico da universidade à realidade da educação básica, nosso projeto traduz conceitos
+                fundamentais da teoria da computação através de abordagens lúdicas e ativas. Proporcionamos a jovens da
+                rede pública a descoberta das engrenagens invisíveis do pensamento algorítmico sem a barreira de jargões
+                excludentes.
+              </p>
+            </div>
+            <div class="md:col-span-4 flex flex-col gap-space-sm">
+              <div class="bg-surface-container p-space-md rounded-xl flex items-center gap-space-md">
+                <span class="material-symbols-outlined text-primary-container text-3xl">psychology</span>
+                <div>
+                  <p class="font-label-lg text-label-lg text-on-surface">Pensamento Formal</p>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant">Lógica acessível e aplicada</p>
+                </div>
+              </div>
+              <div class="bg-surface-container p-space-md rounded-xl flex items-center gap-space-md">
+                <span class="material-symbols-outlined text-secondary text-3xl">extension</span>
+                <div>
+                  <p class="font-label-lg text-label-lg text-on-surface">Pedagogia Lúdica</p>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant">Dinâmicas de aprendizagem</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- SEÇÃO: REGISTROS E GALERIA DO PROJETO -->
+      <section class="w-full py-space-xl pb-18">
+        <div class="max-w-5xl mx-auto flex flex-col gap-space-lg">
+          <div class="flex flex-col gap-space-xs">
+            <div class="flex items-center gap-space-sm">
+              <span class="w-2 h-6 bg-primary-container rounded"></span>
+              <h2 class="font-headline-lg text-headline-sm lg:text-headline-lg text-on-surface">Registros e Galeria do
+                Projeto</h2>
+            </div>
+            <p class="font-body-md text-body-md text-on-surface-variant">
+              Registros das oficinas práticas nas escolas públicas, interações com jogos e momentos com a comunidade
+              acadêmica.
+            </p>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-space-md">
+            <div class="bg-surface-container-low rounded-xl overflow-hidden shadow-sm flex flex-col">
+              <div class="relative w-full aspect-video bg-surface-container overflow-hidden">
+                <img alt="Turma Reunida para Projeto" class="absolute inset-0 w-full h-full object-cover"
+                  src="img/IMG-20261023-WA0030.jpg" />
+              </div>
+              <div class="p-space-sm">
+                <p class="font-label-md text-label-md font-semibold text-on-surface">Turma Reunida para Projeto
+                </p>
+                <p class="font-body-sm text-body-sm text-on-surface-variant">Foi utilizada a biblioteca da escola para realização das atividades.</p>
+              </div>
+            </div>
+            
+            <div class="bg-surface-container-low rounded-xl overflow-hidden shadow-sm flex flex-col">
+              <div class="relative w-full aspect-video bg-surface-container overflow-hidden">
+                <img alt="Introdução à LFA" class="absolute inset-0 w-full h-full object-cover"
+                  src="img/IMG-20261023-WA0023.jpg" />
+              </div>
+              <div class="p-space-sm">
+                <p class="font-label-md text-label-md font-semibold text-on-surface">Introdução à LFA
+                </p>
+                <p class="font-body-sm text-body-sm text-on-surface-variant">Aula expositiva sobre Expressões Regulares e Autômatos Finitos Determinísticos.</p>
+              </div>
+            </div>
+            
+            <div class="bg-surface-container-low rounded-xl overflow-hidden shadow-sm flex flex-col">
+              <div class="relative w-full aspect-video bg-surface-container overflow-hidden">
+                <img alt="Dinâmica Funcionamento AFD " class="absolute inset-0 w-full h-full object-cover"
+                  src="img/IMG-20261023-WA0028.jpg" />
+              </div>
+              <div class="p-space-sm">
+                <p class="font-label-md text-label-md font-semibold text-on-surface">Dinâmica Funcionamento AFD 
+                </p>
+                <p class="font-body-sm text-body-sm text-on-surface-variant">Estudantes participam de dinâmica atuando como o autômato.</p>
+              </div>
+            </div>
+            
+            <div class="bg-surface-container-low rounded-xl overflow-hidden shadow-sm flex flex-col">
+              <div class="relative w-full aspect-video bg-surface-container overflow-hidden">
+                <img alt="Dinâmica Entre Equipes" class="absolute inset-0 w-full h-full object-cover"
+                  src="img/IMG-20261023-WA0022.jpg" />
+              </div>
+              <div class="p-space-sm">
+                <p class="font-label-md text-label-md font-semibold text-on-surface">Dinâmica Entre Equipes
+                </p>
+                <p class="font-body-sm text-body-sm text-on-surface-variant">Equipes colocam em prática os conhecimentos adquiridos.</p>
+              </div>
+            </div>
+            
+            <div class="bg-surface-container-low rounded-xl overflow-hidden shadow-sm flex flex-col">
+              <div class="relative w-full aspect-video bg-surface-container overflow-hidden">
+                <img alt="Alunos Modelando Autômato" class="absolute inset-0 w-full h-full object-cover"
+                  src="img/IMG_20261023_103351.jpg" />
+              </div>
+              <div class="p-space-sm">
+                <p class="font-label-md text-label-md font-semibold text-on-surface">Alunos Modelando Autômato
+                </p>
+                <p class="font-body-sm text-body-sm text-on-surface-variant">Equipes colocam em prática os conhecimentos adquiridos.</p>
+              </div>
+            </div>
+            
+            <div class="bg-surface-container-low rounded-xl overflow-hidden shadow-sm flex flex-col">
+              <div class="relative w-full aspect-video bg-surface-container overflow-hidden">
+                <img alt="Distribuição das Apostilas Didáticas" class="absolute inset-0 w-full h-full object-cover"
+                  src="img/IMG_20261023_105438.jpg" />
+              </div>
+              <div class="p-space-sm">
+                <p class="font-label-md text-label-md font-semibold text-on-surface">Encerramento e Foto com Turma</p>
+                <p class="font-body-sm text-body-sm text-on-surface-variant"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- SEÇÃO: EQUIPE DO PROJETO -->
+      <section class="w-full py-space-xl">
+        <div class="max-w-5xl mx-auto flex flex-col gap-space-lg">
+          <div class="flex items-center gap-space-sm">
+            <span class="w-2 h-6 bg-primary-container rounded"></span>
+            <h2 class="font-headline-lg text-headline-sm lg:text-headline-lg text-on-surface">Equipe do Projeto</h2>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md">
+            <!-- Membro 1 -->
+            <div
+              class="bg-surface-container-low p-space-md rounded-xl shadow-sm flex flex-col justify-between transition-transform duration-200 hover:-translate-y-1">
+              <div class="flex items-start gap-space-sm mb-space-md">
+                <div
+                  class="w-10 h-10 rounded-full bg-primary-fixed text-primary flex items-center justify-center shrink-0">
+                  <span class="material-symbols-outlined">supervisor_account</span>
+                </div>
+                <div>
+                  <h3 class="font-headline-sm text-headline-sm text-on-surface leading-snug">Tadeu Knewitz Zubaran</h3>
+                  <span
+                    class="inline-block mt-1 font-label-md text-label-md px-2 py-0.5 rounded bg-primary-container text-on-primary font-semibold">
+                    Professor Coordenador
+                  </span>
+                </div>
+              </div>
+              <p class="font-body-sm text-body-sm text-on-surface-variant">Coordenação geral, alinhamento pedagógico e
+                interlocução institucional.</p>
+            </div>
+            <!-- Membro 2 -->
+            <div
+              class="bg-surface-container-low p-space-md rounded-xl shadow-sm flex flex-col justify-between transition-transform duration-200 hover:-translate-y-1">
+              <div class="flex items-start gap-space-sm mb-space-md">
+                <div
+                  class="w-10 h-10 rounded-full bg-secondary-container text-secondary flex items-center justify-center shrink-0">
+                  <span class="material-symbols-outlined">co_present</span>
+                </div>
+                <div>
+                  <h3 class="font-headline-sm text-headline-sm text-on-surface leading-snug">João Victor Rodrigues</h3>
+                  <span
+                    class="inline-block mt-1 font-label-md text-label-md px-2 py-0.5 rounded bg-secondary text-surface">
+                    Discente
+                  </span>
+                </div>
+              </div>
+              <p class="font-body-sm text-body-sm text-on-surface-variant">Redação da apostila, realização das oficinas
+                presenciais em escolas.</p>
+            </div>
+            <!-- Membro 3 -->
+            <div
+              class="bg-surface-container-low p-space-md rounded-xl shadow-sm flex flex-col justify-between transition-transform duration-200 hover:-translate-y-1">
+              <div class="flex items-start gap-space-sm mb-space-md">
+                <div
+                  class="w-10 h-10 rounded-full bg-secondary-container text-secondary flex items-center justify-center shrink-0">
+                  <span class="material-symbols-outlined">co_present</span>
+                </div>
+                <div>
+                  <h3 class="font-headline-sm text-headline-sm text-on-surface leading-snug">Kaylane Almeida Lelis</h3>
+                  <span
+                    class="inline-block mt-1 font-label-md text-label-md px-2 py-0.5 rounded bg-secondary text-surface">
+                    Discente
+                  </span>
+                </div>
+              </div>
+              <p class="font-body-sm text-body-sm text-on-surface-variant">Redação da apostila, realização das oficinas
+                presenciais em escolas.</p>
+            </div>
+            <!-- Membro 4 -->
+            <div
+              class="bg-surface-container-low p-space-md rounded-xl shadow-sm flex flex-col justify-between transition-transform duration-200 hover:-translate-y-1">
+              <div class="flex items-start gap-space-sm mb-space-md">
+                <div
+                  class="w-10 h-10 rounded-full bg-secondary-container text-secondary flex items-center justify-center shrink-0">
+                  <span class="material-symbols-outlined">co_present</span>
+                </div>
+                <div>
+                  <h3 class="font-headline-sm text-headline-sm text-on-surface leading-snug">Pedro Bazzarella Pereira
+                  </h3>
+                  <span
+                    class="inline-block mt-1 font-label-md text-label-md px-2 py-0.5 rounded bg-secondary text-surface">
+                    Discente
+                  </span>
+                </div>
+              </div>
+              <p class="font-body-sm text-body-sm text-on-surface-variant">Produção de vídeo-aulas, desenvolvimento do
+                simulador web.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- SEÇÃO: AUTÔMATO FINITO DETERMINÍSTICO (AFD / LFA DESCOMPLICADA) -->
+      <section class="w-full py-space-xl">
+        <div class="max-w-5xl mx-auto flex flex-col gap-space-lg">
+          <div class="flex items-center gap-space-sm">
+            <span class="w-2 h-6 bg-secondary rounded"></span>
+            <h2 class="font-headline-lg text-headline-sm lg:text-headline-lg text-on-surface">O que é LFA?</h2>
+          </div>
+          <div
+            class="bg-surface-container p-space-lg rounded-xl shadow-sm flex flex-col lg:flex-row gap-space-xl items-center">
+            <!-- Texto Didático e Explicativo -->
+            <div class="w-full lg:w-1/2 flex flex-col gap-space-md">
+              <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                Linguagens Formais e Autômatos (LFA) podem soar abstratos, mas representam a base da tomada de decisão.
+                Um <strong>Autômato Finito Determinístico (AFD)</strong> funciona como as regras de um jogo de tabuleiro
+                ou as decisões de um personagem em um labirinto:
+              </p>
+              <ul class="space-y-space-xs font-body-sm text-body-sm text-on-surface-variant">
+                <li class="flex items-start gap-space-xs">
+                  <span
+                    class="material-symbols-outlined text-primary-container text-[18px] shrink-0 mt-0.5">check_circle</span>
+                  <span><strong>Estados (Círculos):</strong> Onde o jogador ou sistema se encontra no momento.</span>
+                </li>
+                <li class="flex items-start gap-space-xs">
+                  <span
+                    class="material-symbols-outlined text-primary-container text-[18px] shrink-0 mt-0.5">check_circle</span>
+                  <span><strong>Transições (Setas):</strong> Ações ou escolhas do usuário que mudam a situação.</span>
+                </li>
+                <li class="flex items-start gap-space-xs">
+                  <span
+                    class="material-symbols-outlined text-primary-container text-[18px] shrink-0 mt-0.5">check_circle</span>
+                  <span><strong>Estado de Aceitação (Anel Duplo):</strong> A vitória, conclusão da regra ou objetivo
+                    alcançado.</span>
+                </li>
+              </ul>
+              <p class="font-body-sm text-body-sm text-on-surface-variant italic">
+                Exemplo ilustrado ao lado: autômato que aceita sequências lógicas contendo a subsequência '10' (inicia
+                em q0, processa e valida em q2).
+              </p>
+            </div>
+            <!-- Diagrama SVG do Autômato -->
+            <div
+              class="w-full lg:w-1/2 bg-surface-container-lowest p-space-md rounded-xl shadow-inner flex flex-col items-center justify-center overflow-x-auto">
+              <svg class="w-full h-auto max-w-[480px] select-none text-on-surface" viewbox="0 0 540 220"
+                xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <marker id="arrow" markerheight="6" markerwidth="6" orient="auto-start-reverse" refx="9" refy="5"
+                    viewbox="0 0 10 10">
+                    <path d="M 0 1 L 10 5 L 0 9 z" fill="#183a37"></path>
+                  </marker>
+                  <marker id="arrow-active" markerheight="6" markerwidth="6" orient="auto-start-reverse" refx="9"
+                    refy="5" viewbox="0 0 10 10">
+                    <path d="M 0 1 L 10 5 L 0 9 z" fill="#c44900"></path>
+                  </marker>
+                </defs>
+                <!-- Seta Inicial -->
+                <path d="M 20 110 L 60 110" fill="none" marker-end="url(#arrow)" stroke="#183a37" stroke-width="2.5">
+                </path>
+                <text fill="#436461" font-family="Space Grotesk" font-size="11" font-weight="600" x="25"
+                  y="98">INÍCIO</text>
+                <!-- Estado q0 -->
+                <circle cx="100" cy="110" fill="#efd6ac" r="32" stroke="#183a37" stroke-width="2.5"></circle>
+                <text fill="#04151f" font-family="Space Grotesk" font-size="18" font-weight="700" text-anchor="middle"
+                  x="100" y="116">q0</text>
+                <!-- Self-loop em q0 (entrada 0) -->
+                <path d="M 90 79 C 75 40, 125 40, 110 79" fill="none" marker-end="url(#arrow)" stroke="#183a37"
+                  stroke-width="2"></path>
+                <text fill="#432534" font-family="Space Grotesk" font-size="13" font-weight="700" text-anchor="middle"
+                  x="100" y="44">0</text>
+                <!-- Transição q0 -> q1 (entrada 1) -->
+                <path d="M 132 110 L 228 110" fill="none" marker-end="url(#arrow-active)" stroke="#c44900"
+                  stroke-width="2.5"></path>
+                <text fill="#c44900" font-family="Space Grotesk" font-size="13" font-weight="700" text-anchor="middle"
+                  x="180" y="98">1 (Ação)</text>
+                <!-- Estado q1 -->
+                <circle cx="260" cy="110" fill="#ffe5ba" r="32" stroke="#183a37" stroke-width="2.5"></circle>
+                <text fill="#04151f" font-family="Space Grotesk" font-size="18" font-weight="700" text-anchor="middle"
+                  x="260" y="116">q1</text>
+                <!-- Transição q1 -> q2 (entrada 0) -->
+                <path d="M 292 110 L 388 110" fill="none" marker-end="url(#arrow-active)" stroke="#c44900"
+                  stroke-width="2.5"></path>
+                <text fill="#c44900" font-family="Space Grotesk" font-size="13" font-weight="700" text-anchor="middle"
+                  x="340" y="98">0 (Validação)</text>
+                <!-- Transição de retorno q1 -> q0 (curvada embaixo) -->
+                <path d="M 245 138 C 210 180, 150 180, 115 138" fill="none" marker-end="url(#arrow)" stroke="#183a37"
+                  stroke-dasharray="4 3" stroke-width="1.8"></path>
+                <text fill="#436461" font-family="Space Grotesk" font-size="11" font-weight="600" text-anchor="middle"
+                  x="180" y="190">1 (Reiniciar)</text>
+                <!-- Estado q2 (Aceitação / Anel Duplo) -->
+                <circle cx="420" cy="110" fill="#c44900" r="34" stroke="#183a37" stroke-width="2.5"></circle>
+                <circle cx="420" cy="110" fill="#efd6ac" r="27" stroke="#183a37" stroke-width="2"></circle>
+                <text fill="#04151f" font-family="Space Grotesk" font-size="18" font-weight="700" text-anchor="middle"
+                  x="420" y="116">q2</text>
+                <!-- Self-loop em q2 -->
+                <path d="M 410 77 C 395 38, 445 38, 430 77" fill="none" marker-end="url(#arrow)" stroke="#183a37"
+                  stroke-width="2"></path>
+                <text fill="#432534" font-family="Space Grotesk" font-size="13" font-weight="700" text-anchor="middle"
+                  x="420" y="44">0, 1</text>
+                <text fill="#c44900" font-family="Space Grotesk" font-size="11" font-weight="700" text-anchor="middle"
+                  x="420" y="165">ACEITAÇÃO</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- SEÇÃO: MATERIAIS PRODUZIDOS NO PROJETO -->
+      <section class="w-full py-space-xl">
+        <div class="max-w-5xl mx-auto flex flex-col gap-space-lg">
+          <div class="flex flex-col gap-space-xs">
+            <div class="flex items-center gap-space-sm">
+              <span class="w-2 h-6 bg-primary-container rounded"></span>
+              <h2 class="font-headline-lg text-headline-sm lg:text-headline-lg text-on-surface">Materiais Produzidos</h2>
+            </div>
+            <p class="font-body-md text-body-md text-on-surface-variant">
+              Materiais de apoio criados além das atividades realizadas com os alunos de Ensino Médio.
+            </p>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-space-lg">
+            <!-- Card 1: Apostila -->
+            <div
+              class="bg-surface-container-low rounded-xl overflow-hidden shadow-sm flex flex-col justify-between transition-all duration-200 hover:shadow-md">
+              <div>
+                <div
+                  class="relative w-full aspect-video bg-surface-container flex items-center justify-center overflow-hidden">
+                  <img alt="Placeholder Apostila de Linguagens Formais" class="w-full h-full object-cover"
+                    src="https://lh3.googleusercontent.com/aida/ALJJyrC8efCU4gKkxNhyGJwctGhkfu8zkzrrB1m-HCjvpUMCv5h2a2Pq6i_zilUp7TUEdRnlGa9jsp03qN2DUQZ7VNIHkHXjDp20_6XOSXzbeKvriUUHea92QWqcCncVg76Ng_oQOPnus_MF-FumkD_iKj3flTssCvky9AkDGWWFxh-f6E0qJZAssmz4qlAjrby_uKNIzOJ8Sdz3zQbz0mRCofmIHsUzIQ2EBO7nK43ih68X" />
+                  <div
+                    class="absolute top-space-xs right-space-xs bg-surface/90 px-2 py-0.5 rounded text-label-md font-label-md text-on-surface">
+                    Livro Didático
+                  </div>
+                </div>
+                <div class="p-space-lg flex flex-col gap-space-xs">
+                  <h3 class="font-headline-sm text-headline-sm text-on-surface">Apostila de Linguagens Formais e
+                    Autômatos</h3>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                    Material didático abordando os temas de Nível Superior de Linguagens Formais e Autômatos, contendo a contextualização do conteúdo, exercícios de fixação e exemplos.
+                  </p>
+                </div>
+              </div>
+              <div class="p-space-lg pt-0">
+                <a class="inline-flex items-center justify-center gap-space-xs w-full py-2.5 px-space-md rounded bg-primary-container text-surface-bright font-label-lg text-label-lg font-semibold hover:opacity-95 transition-opacity"
+                  href="#apostila">
+                  <span class="material-symbols-outlined text-[18px]">download</span>
+                  Acessar Apostila
+                </a>
+              </div>
+            </div>
+            <!-- Card 2: Vídeos Educacionais -->
+            <div
+              class="bg-surface-container-low rounded-xl overflow-hidden shadow-sm flex flex-col justify-between transition-all duration-200 hover:shadow-md">
+              <div>
+                <div
+                  class="relative w-full aspect-video bg-surface-container flex items-center justify-center overflow-hidden">
+                  <img alt="Placeholder Playlist de Vídeos Educacionais" class="w-full h-full object-cover"
+                    src="https://lh3.googleusercontent.com/aida/ALJJyrC8efCU4gKkxNhyGJwctGhkfu8zkzrrB1m-HCjvpUMCv5h2a2Pq6i_zilUp7TUEdRnlGa9jsp03qN2DUQZ7VNIHkHXjDp20_6XOSXzbeKvriUUHea92QWqcCncVg76Ng_oQOPnus_MF-FumkD_iKj3flTssCvky9AkDGWWFxh-f6E0qJZAssmz4qlAjrby_uKNIzOJ8Sdz3zQbz0mRCofmIHsUzIQ2EBO7nK43ih68X" />
+                  <div
+                    class="absolute top-space-xs right-space-xs bg-surface/90 px-2 py-0.5 rounded text-label-md font-label-md text-on-surface">
+                    Vídeo Aulas
+                  </div>
+                </div>
+                <div class="p-space-lg flex flex-col gap-space-xs">
+                  <h3 class="font-headline-sm text-headline-sm text-on-surface">Playlist de Vídeos Educacionais</h3>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                    Vídeos educacionais curtos abordando os tópicos da apostila, complementando o conteúdo de Linguagens Formais e Autômatos apresentado e tratando exemplos de forma visual.
+                  </p>
+                </div>
+              </div>
+              <div class="p-space-lg pt-0">
+                <a class="inline-flex items-center justify-center gap-space-xs w-full py-2.5 px-space-md rounded bg-secondary text-surface font-label-lg text-label-lg font-semibold hover:opacity-95 transition-opacity"
+                  href="#playlist">
+                  <span class="material-symbols-outlined text-[18px]">smart_display</span>
+                  Assistir no YouTube
+                </a>
+              </div>
+            </div>
+            <!-- Card 3: Jogo de Navegador -->
+            <div
+              class="bg-surface-container-low rounded-xl overflow-hidden shadow-sm flex flex-col justify-between transition-all duration-200 hover:shadow-md">
+              <div>
+                <div
+                  class="relative w-full aspect-video bg-surface-container flex items-center justify-center overflow-hidden">
+                  <img alt="Placeholder Jogo de Criação de Autômatos" class="w-full h-full object-cover"
+                    src="https://lh3.googleusercontent.com/aida/ALJJyrC8efCU4gKkxNhyGJwctGhkfu8zkzrrB1m-HCjvpUMCv5h2a2Pq6i_zilUp7TUEdRnlGa9jsp03qN2DUQZ7VNIHkHXjDp20_6XOSXzbeKvriUUHea92QWqcCncVg76Ng_oQOPnus_MF-FumkD_iKj3flTssCvky9AkDGWWFxh-f6E0qJZAssmz4qlAjrby_uKNIzOJ8Sdz3zQbz0mRCofmIHsUzIQ2EBO7nK43ih68X" />
+                  <div
+                    class="absolute top-space-xs right-space-xs bg-surface/90 px-2 py-0.5 rounded text-label-md font-label-md text-on-surface">
+                    Gamificação Web
+                  </div>
+                </div>
+                <div class="p-space-lg flex flex-col gap-space-xs">
+                  <h3 class="font-headline-sm text-headline-sm text-on-surface">Jogo de Navegador: Criação de Autômatos
+                  </h3>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                    Jogo interativo desenvolvido pelo projeto. Os estudantes resolvem desafios gerados proceduralmente, criando autômatos que atendem as demandas de cada questão.
+                  </p>
+                </div>
+              </div>
+              <div class="p-space-lg pt-0">
+                <a class="inline-flex items-center justify-center gap-space-xs w-full py-2.5 px-space-md rounded bg-primary-container text-surface-bright font-label-lg text-label-lg font-semibold hover:opacity-95 transition-opacity"
+                  href="#jogo">
+                  <span class="material-symbols-outlined text-[18px]">play_circle</span>
+                  Jogar no Navegador
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- SEÇÃO: AVALIAÇÃO E MÉTRICAS DE IMPACTO -->
+      <section class="w-full py-space-xl">
+        <div class="max-w-5xl mx-auto flex flex-col gap-space-lg">
+          <div class="flex items-center gap-space-sm">
+            <span class="w-2 h-6 bg-secondary rounded"></span>
+            <h2 class="font-headline-lg text-headline-sm lg:text-headline-lg text-on-surface">Avaliação e Resultados
+              Obtidos</h2>
+          </div>
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-stretch">
+            <!-- Lado Esquerdo: Imagem do Formulário -->
+            <div
+              class="lg:col-span-5 bg-surface-container-low p-space-md rounded-xl shadow-sm flex flex-col justify-between">
+              <div
+                class="relative w-full aspect-square bg-surface-container rounded-lg overflow-hidden flex items-center justify-center">
+                <img alt="Formulário de Avaliação Preenchido pelos Estudantes" class="w-full h-full object-cover"
+                  src="https://lh3.googleusercontent.com/aida/ALJJyrC8efCU4gKkxNhyGJwctGhkfu8zkzrrB1m-HCjvpUMCv5h2a2Pq6i_zilUp7TUEdRnlGa9jsp03qN2DUQZ7VNIHkHXjDp20_6XOSXzbeKvriUUHea92QWqcCncVg76Ng_oQOPnus_MF-FumkD_iKj3flTssCvky9AkDGWWFxh-f6E0qJZAssmz4qlAjrby_uKNIzOJ8Sdz3zQbz0mRCofmIHsUzIQ2EBO7nK43ih68X" />
+              </div>
+              <div class="mt-space-sm p-space-sm bg-surface-container rounded flex items-center gap-space-xs">
+                <span class="material-symbols-outlined text-secondary text-[20px] shrink-0">edit_note</span>
+                <p class="font-body-sm text-body-sm text-on-surface-variant">
+                  Espaço reservado para foto do formulário de avaliação preenchido pelos estudantes.
+                </p>
+              </div>
+            </div>
+            <!-- Lado Direito: Métricas e Síntese -->
+            <div class="lg:col-span-7 flex flex-col justify-between gap-space-md">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+                <!-- Métrica 1 -->
+                <div class="bg-surface-container p-space-md rounded-xl flex flex-col justify-center">
+                  <span class="font-display-lg text-display-lg text-primary-container leading-none">94%</span>
+                  <p class="font-headline-sm text-headline-sm text-on-surface mt-space-xs">Assimilação Lógica</p>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant">Compreensão de regras formais e estados
+                    de aceitação comprovada nos questionários pós-oficina.</p>
+                </div>
+                <!-- Métrica 2 -->
+                <div class="bg-surface-container p-space-md rounded-xl flex flex-col justify-center">
+                  <span class="font-display-lg text-display-lg text-secondary leading-none">+280</span>
+                  <p class="font-headline-sm text-headline-sm text-on-surface mt-space-xs">Alunos Participantes</p>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant">Estudantes do ensino fundamental II e
+                    médio atendidos em escolas públicas estaduais.</p>
+                </div>
+                <!-- Métrica 3 -->
+                <div class="bg-surface-container p-space-md rounded-xl flex flex-col justify-center">
+                  <span class="font-display-lg text-display-lg text-primary-container leading-none">8.9/10</span>
+                  <p class="font-headline-sm text-headline-sm text-on-surface mt-space-xs">Índice de Satisfação</p>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant">Avaliação geral dos estudantes quanto ao
+                    engajamento com as dinâmicas e o jogo web.</p>
+                </div>
+                <!-- Métrica 4 -->
+                <div class="bg-surface-container p-space-md rounded-xl flex flex-col justify-center">
+                  <span class="font-display-lg text-display-lg text-secondary leading-none">100%</span>
+                  <p class="font-headline-sm text-headline-sm text-on-surface mt-space-xs">Interesse Escolar</p>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant">Das diretorias e coordenações pedagógicas
+                    consultadas solicitaram continuidade do projeto.</p>
+                </div>
+              </div>
+              <div class="bg-surface-container-low p-space-md rounded-xl">
+                <h4 class="font-label-lg text-label-lg text-on-surface mb-1 flex items-center gap-space-xs">
+                  <span class="material-symbols-outlined text-[18px] text-primary-container">insights</span>
+                  Síntese Qualitativa dos Formulários
+                </h4>
+                <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                  Os relatos qualitativos evidenciam a desmistificação do "medo da matemática e computação". Mais de 70%
+                  dos alunos relataram enxergar pela primeira vez a relação direta entre o aprendizado de regras lógicas
+                  na escola e o funcionamento dos jogos e tecnologias digitais que consomem em seu dia a dia.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
+
+</html>

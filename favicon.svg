@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <!-- Gradiente escuro elegante para o capelo -->
+    <linearGradient id="capTop" x1="20%" y1="0%" x2="80%" y2="100%">
+      <stop offset="0%" stop-color="#2e384d" />
+      <stop offset="100%" stop-color="#111827" />
+    </linearGradient>
+    <linearGradient id="capRim" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#182030" />
+      <stop offset="100%" stop-color="#080d16" />
+    </linearGradient>
+    <linearGradient id="capBase" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1a2233" />
+      <stop offset="50%" stop-color="#242f44" />
+      <stop offset="100%" stop-color="#131a28" />
+    </linearGradient>
+
+    <!-- Gradiente dourado para a borla / tassel -->
+    <linearGradient id="tasselGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="40%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#b45309" />
+    </linearGradient>
+
+    <!-- Sombra sutil -->
+    <filter id="softShadow" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="1.5" stdDeviation="1.5" flood-color="#000000" flood-opacity="0.35" />
+    </filter>
+  </defs>
+
+  <style>
+    .outline-highlight {
+      stroke: #64748b;
+    }
+    @media (prefers-color-scheme: dark) {
+      .outline-highlight {
+        stroke: #94a3b8;
+      }
+    }
+  </style>
+
+  <g filter="url(#softShadow)">
+    <!-- 1. Calota inferior (skullcap) -->
+    <path d="M 18 31 L 18 40.5 C 18 47.5 46 47.5 46 40.5 L 46 31" 
+          fill="url(#capBase)" 
+          stroke="#334155" stroke-width="1" />
+
+    <!-- 2. Espessura frontal inferior do tabuleiro (mortarboard edge) -->
+    <polygon points="6,23 32,34 58,23 58,25.5 32,36.5 6,25.5" 
+             fill="url(#capRim)" />
+
+    <!-- 3. Tabuleiro superior (losango) -->
+    <polygon points="32,12 58,23 32,34 6,23" 
+             fill="url(#capTop)" 
+             class="outline-highlight"
+             stroke-width="1.2" 
+             stroke-linejoin="round" />
+
+    <!-- 4. Reflexo facetado sutil no tabuleiro -->
+    <polygon points="32,13.5 32,32.5 7.5,23" 
+             fill="#ffffff" opacity="0.06" />
+
+    <!-- 5. Botão central do capelo -->
+    <ellipse cx="32" cy="23" rx="2.4" ry="1.6" 
+             fill="url(#tasselGold)" 
+             stroke="#92400e" stroke-width="0.5" />
+
+    <!-- 6. Cordão da borla (tassel cord) -->
+    <path d="M 32 23 C 43 23.5 49 27 49 34" 
+          fill="none" 
+          stroke="url(#tasselGold)" 
+          stroke-width="2.2" 
+          stroke-linecap="round" />
+
+    <!-- 7. Presilha da borla -->
+    <circle cx="49" cy="34.5" r="2" 
+            fill="url(#tasselGold)" 
+            stroke="#92400e" stroke-width="0.5" />
+
+    <!-- 8. Pingente da borla (tassel fringe) -->
+    <polygon points="46.5,36 51.5,36 53,50 45,50" 
+             fill="url(#tasselGold)" />
+    <!-- Detalhes de fios da franja -->
+    <line x1="47" y1="50" x2="47" y2="45" stroke="#92400e" stroke-width="0.6" />
+    <line x1="49" y1="50" x2="49" y2="45" stroke="#92400e" stroke-width="0.6" />
+    <line x1="51" y1="50" x2="51" y2="45" stroke="#92400e" stroke-width="0.6" />
+  </g>
+</svg>
